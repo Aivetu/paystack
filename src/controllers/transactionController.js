@@ -1,12 +1,8 @@
-const { json } = require("express");
+const url = require('../util/paymentUrl');
 
-const baseUrl = 'https://api.paystack.co/';
-const transList = 'transaction';
-const initializeTrans = 'transaction/initialize';
-const verifyTrans = 'transaction/verify/'
+const baseUrl= url.baseUrl;
 
 const key = process.env.paystack_sk;
-console.log(key);
   
 const optionsGet = {
     method: 'GET',
@@ -16,11 +12,9 @@ const optionsGet = {
 }
 
 
-
-
 const transactionList = async (req,res)=>{
     
-    const api = await fetch(baseUrl + transList,optionsGet);
+    const api = await fetch(baseUrl + url.transList,optionsGet);
     const data = await api.json();
 
     if(api.ok){
@@ -53,7 +47,7 @@ const initializeTransaction = async (req,res)=>{
 
     
 
-    const api = await fetch(baseUrl+initializeTrans,optionsPost);
+    const api = await fetch(baseUrl+url.initializeTrans,optionsPost);
     const data = await api.json();
     if(api.ok){
         try{
@@ -70,11 +64,14 @@ const verifyTransaction = async (req,res)=>{
 
     const reference =  req.params.reference;
 
-    const api = await fetch(baseUrl + verifyTrans + reference,optionsGet);
+    const api = await fetch(baseUrl + url.verifyTrans + reference,optionsGet);
     const data = await api.json();
 
     if(api.ok){
     try {
+        // const authorisationCode = data.data.authorization.authorizationCode;
+        // const email = data.data.customer.email;
+        
         res.json(data.data);
         
     } catch (error) {
